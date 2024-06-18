@@ -1,0 +1,51 @@
+{% extends "sr_base.html" %}
+
+{% block title %}
+Car Showroom
+{% endblock %}
+
+{% block content %}
+{% if messages %}
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<!-- Search box -->
+<div class="row mb-4 justify-content-center">
+    <div class="col-md-6">
+        <form method="get" action="{% url 'home' %}">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search for cars...">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    {% for car in cars %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if car.images.first %}
+            <img src="{{ car.images.first.image.url }}" class="card-img-top" alt="{{ car.name }}">
+            {% else %}
+            <img src="https://via.placeholder.com/300" class="card-img-top" alt="{{ car.name }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ car.name }}</h5>
+                <p class="card-text">{{ car.description }}</p>
+                <a href="{% url 'car_details' car.id %}" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
