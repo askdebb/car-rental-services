@@ -7,6 +7,7 @@
 {% block content %}
 <div class="container mt-4">
     <div class="row">
+        <!-- Left Column: Carousel and Car Details -->
         <div class="col-md-6">
             <div id="carCarousel" class="carousel slide" data-ride="carousel">
                 <div class="carousel-inner">
@@ -25,18 +26,113 @@
                     <span class="sr-only">Next</span>
                 </a>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
+            <div class="card mt-4">
                 <div class="card-body">
                     <h2 class="card-title">{{ car.name }}</h2>
                     <p class="card-text">{{ car.make }}</p>
                     <p class="card-text">{{ car.description }}</p>
                     <p class="card-text">Price: ${{ car.price }}</p>
-                    <a href="#" class="btn btn-primary">Rent</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Reservation Form -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Make a Reservation</h4>
+                    <form id="reservationForm" method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
+                        {% csrf_token %}
+                        <input type="hidden" name="public_key" value="FLWPUBK_TEST-02b9b5fc6406bd4a41c3ff141cc45e93-X" />
+                        <input type="hidden" name="customer[email]" value="{{ request.user.email }}" />
+                        <input type="hidden" name="customer[name]" value="{{ request.user }}" />
+                        <input type="hidden" name="tx_ref" value="txref-{{ car.id }}" />
+                        <input type="hidden" name="amount" value="{{ car.price }}" />
+                        <input type="hidden" name="currency" value="USD" />
+                        <input type="hidden" name="meta[source]" value="docs-html-test" />
+
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_number">ID Number</label>
+                            <input type="text" class="form-control" id="id_number" name="id_number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone_number">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Emergency Contact Person</label>
+                            <div class="row">
+                                <div class="col">
+                                    <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" placeholder="Name" required>
+                                </div>
+                                <div class="col">
+                                    <input type="tel" class="form-control" id="emergency_contact_phone" name="emergency_contact_phone" placeholder="Contact Number" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reservation_type">Type (Individual or Company)</label>
+                            <select class="form-control" id="reservation_type" name="reservation_type" required>
+                                <option value="individual">Individual</option>
+                                <option value="company">Company</option>
+                            </select>
+                        </div>
+                        <!-- Additional fields for company -->
+                        <div id="company_fields" style="display: none;">
+                            <div class="form-group">
+                                <label for="company_name">Company Name</label>
+                                <input type="text" class="form-control" id="company_name" name="company_name">
+                            </div>
+                            <div class="form-group">
+                                <label for="company_email">Company Email</label>
+                                <input type="email" class="form-control" id="company_email" name="company_email">
+                            </div>
+                            <div class="form-group">
+                                <label for="company_contact">Company Contact</label>
+                                <input type="tel" class="form-control" id="company_contact" name="company_contact">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="delivery_method">Delivery Method</label>
+                            <select class="form-control" id="delivery_method" name="delivery_method" required>
+                                <option value="pickup">Pickup</option>
+                                <option value="delivery">Delivery</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block mt-3" id="start-payment-button">Submit Reservation</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Show company fields if 'company' is selected
+    document.getElementById('reservation_type').addEventListener('change', function() {
+        var companyFields = document.getElementById('company_fields');
+        if (this.value === 'company') {
+            companyFields.style.display = 'block';
+        } else {
+            companyFields.style.display = 'none';
+        }
+    });
+
+    // Handle form submission
+    var form = document.getElementById('reservationForm');
+    form.addEventListener('submit', function(event) {
+        console.log("Form submitted");
+    });
+});
+</script>
+
 {% endblock %}
