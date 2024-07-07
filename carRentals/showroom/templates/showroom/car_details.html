@@ -47,6 +47,7 @@
                         <input type="hidden" name="customer[email]" value="{{ request.user.email }}" />
                         <input type="hidden" name="customer[name]" value="{{ request.user }}" />
                         <input type="hidden" name="tx_ref" value="txref-{{ car.id }}" />
+                        <input type="hidden" name="redirect_url" value="{% url 'reservation_success' %}" /> <!-- Updated redirect URL -->
                         <input type="hidden" name="amount" value="{{ car.price }}" />
                         <input type="hidden" name="currency" value="USD" />
                         <input type="hidden" name="meta[source]" value="docs-html-test" />

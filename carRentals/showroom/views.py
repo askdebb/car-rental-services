@@ -7,6 +7,8 @@ from .forms import ReservationForm
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 
+from django.http import HttpResponse
+
 User = get_user_model()
 
 @login_required
@@ -105,4 +107,12 @@ def make_reservation(request, car_id):
 
 @login_required
 def reservation_success_view(request):
-    return render(request, 'showroom/reservation_success.html')
+    status = request.GET.get('status')
+    tx_ref = request.GET.get('tx_ref')
+    transaction_id = request.GET.get('transaction_id')
+
+    if status == 'successful':
+        # Process successful payment logic here if needed
+        return render(request, 'showroom/reservation_success.html', {'tx_ref': tx_ref, 'transaction_id': transaction_id})
+    else:
+        return HttpResponse("Payment was not successful.")
