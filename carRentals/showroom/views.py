@@ -3,14 +3,12 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import Car, Reservation
 from .forms import ReservationForm
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-from django.http import HttpResponse
 from decouple import config
-from decimal import Decimal
 
 FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
 
@@ -118,9 +116,9 @@ def reservation_success_view(request):
     transaction_id = request.GET.get('transaction_id')
 
     if status == 'successful':
-        # Fetch the reservation using the reservation ID extracted from tx_ref
-        reservation_id = tx_ref.split('-')[-1]  # Assuming tx_ref is in the format 'txref-<reservation_id>'
-        reservation = get_object_or_404(Reservation, id=reservation_id)
+        # Fetch the reservation using the reservation reference extracted from tx_ref
+        reservation_reference = tx_ref.split('_')[-1]  # Assuming tx_ref is in the format 'CAR_RENT_<reservation_reference>'
+        reservation = get_object_or_404(Reservation, reference_number=reservation_reference)
         car = get_object_or_404(Car, id=reservation.car.id)
         
         # Process successful payment logic here if needed
