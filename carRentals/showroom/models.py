@@ -15,12 +15,18 @@ class Car(models.Model):
     def __str__(self):
         return self.name
 
+    def set_thumbnail(self, image_id):
+        self.images.update(is_thumbnail=False)
+        self.images.filter(id=image_id).update(is_thumbnail=True)
+
 class CarImage(models.Model):
     image = models.ImageField(upload_to='car_images/')
     alt_text = models.CharField(max_length=100, blank=True)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='car_images', null=True, blank=True)  # Updated related_name
+    is_thumbnail = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Image for {self.cars.first().name if self.cars.exists() else 'Unknown Car'}"
+        return f"Image for {self.car.name if self.car else 'Unknown Car'}"
 
 class Reservation(models.Model):
     INDIVIDUAL = 'individual'

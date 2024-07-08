@@ -56,7 +56,6 @@ LOGOUT_REDIRECT_URL = 'login'  # Replace 'login' with your desired redirect URL 
 AUTH_USER_MODEL = 'accounts.User'
 
 
-
 # settings.py
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default='django.core.mail.backends.smtp.EmailBackend')
@@ -70,6 +69,7 @@ DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -156,11 +156,61 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# AWS_ACCESS_KEY= config('AWS_ACCESS_KEY')
+# AWS_SECRET_ACCESS_KEY= config('AWS_SECRET_ACCESS_KEY')
+# AWS_STORAGE_BUCKET_NAME= config('AWS_STORAGE_BUCKET_NAME')
+# AWS_S3_SIGNATURE_NAME='s3v4'
+# AWS_S3_REGION_NAME=config('AWS_S3_REGION_NAME')
+# AWS_S3_FILE_OVERWRITE= False
+# AWS_DEFAULT_ACL=None
+# AWS_S3_VERITY= True
+# DEFAULT_FILE_STORAGE= config('DEFAULT_FILE_STORAGE')
+
+
+# AWS_ACCESS_KEY='AKIATCKARGPBCAOXA5XA'
+# AWS_SECRET_ACCESS_KEY='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'
+# AWS_STORAGE_BUCKET_NAME='carrentalbkt'
+# AWS_CUSTOM_DOMAIN='%s.s3.amazonaws.com'%AWS_STORAGE_BUCKET_NAME
+# AWS_S3_SIGNATURE_NAME='s3v4'
+# AWS_S3_REGION_NAME='eu-north-1'
+# AWS_S3_FILE_OVERWRITE= False
+# AWS_DEFAULT_ACL=None
+# AWS_S3_VERITY= True
+# DEFAULT_FILE_STORAGE='storages.backends.s3boto3.S3Boto3Storage'
+
+# STORAGES = {
+#     # Media file (image) management
+#     'default': {
+#         'BACKEND': 'storages.backends.s3boto3.S3StaticStorage',
+
+#         },
+#         'static': {
+#             'BACKEND': 'storages.backends.s3boto3.S3StaticStorage',             
+            
+# },
+#         'staticfiles': {
+#             'BACKEND': 'storages.backends.s3boto3.S3StaticStorage',
+#         }
+# }
