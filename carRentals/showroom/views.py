@@ -119,9 +119,8 @@ def reservation_success_view(request):
 
     if status == 'successful':
         # Extract the reservation ID from the tx_ref
-        reservation_reference = tx_ref.split('-')[-1]
-
         try:
+            reservation_reference = tx_ref.split('-')[-1]
             reservation = Reservation.objects.get(reference_number=reservation_reference, user=request.user)
             car = reservation.car
         except Reservation.DoesNotExist:
@@ -130,7 +129,7 @@ def reservation_success_view(request):
             return HttpResponse("No Car matches the given query.")
         except Reservation.MultipleObjectsReturned:
             return HttpResponse("Multiple reservations found, please contact support.")
-
+        
         # Process successful payment logic here if needed
         context = {
             'reservation': reservation,
