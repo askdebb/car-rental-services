@@ -116,11 +116,15 @@ def reservation_success_view(request):
     transaction_id = request.GET.get('transaction_id')
 
     if status == 'successful':
-        # Fetch the reservation using the reservation reference extracted from tx_ref
-        reservation_reference = tx_ref.split('_')[-1]  # Assuming tx_ref is in the format 'CAR_RENT_<reservation_reference>'
-        reservation = get_object_or_404(Reservation, reference_number=reservation_reference)
-        car = get_object_or_404(Car, id=reservation.car.id)
-        
+        # Fetch the reservation using the reservation ID extracted from tx_ref
+        reservation_reference = tx_ref.split('-')[-1]  # Assuming tx_ref is in the format 'txref-<reservation_id>'
+        try:
+            reservation = Reservation.objects.get(reference_number=reservation_reference)
+        except Reservation.DoesNotExist:
+            return HttpResponse("No Reservation matches the given query.")
+
+        car = reservation.car
+
         # Process successful payment logic here if needed
         context = {
             'reservation': reservation,
