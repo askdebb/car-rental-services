@@ -41,34 +41,40 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Make a Reservation</h4>
-                    <form id="reservationForm" method="POST" action="{% url 'make_reservation' car.id %}">
+                    <form id="reservationForm" class="needs-validation" method="POST" action="{% url 'make_reservation' car.id %}" novalidate>
                         {% csrf_token %}
                         
                         <input type="hidden" name="car_id" value="{{ car.id }}">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
+                            <div class="invalid-feedback">Please enter your name.</div>
                         </div>
                         <div class="form-group">
                             <label for="id_number">ID Number</label>
                             <input type="text" class="form-control" id="id_number" name="id_number" required>
+                            <div class="invalid-feedback">Please enter your ID number.</div>
                         </div>
                         <div class="form-group">
                             <label for="phone_number">Phone Number</label>
                             <input type="tel" class="form-control" id="phone_number" name="phone_number" required>
+                            <div class="invalid-feedback">Please enter your phone number.</div>
                         </div>
                         <div class="form-group">
                             <label for="address">Address</label>
                             <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+                            <div class="invalid-feedback">Please enter your address.</div>
                         </div>
                         <div class="form-group">
                             <label>Emergency Contact Person</label>
                             <div class="row">
                                 <div class="col">
                                     <input type="text" class="form-control" id="emergency_contact_name" name="emergency_contact_name" placeholder="Name" required>
+                                    <div class="invalid-feedback">Please enter the emergency contact name.</div>
                                 </div>
                                 <div class="col">
                                     <input type="tel" class="form-control" id="emergency_contact_phone" name="emergency_contact_phone" placeholder="Contact Number" required>
+                                    <div class="invalid-feedback">Please enter the emergency contact number.</div>
                                 </div>
                             </div>
                         </div>
@@ -78,20 +84,24 @@
                                 <option value="individual">Individual</option>
                                 <option value="company">Company</option>
                             </select>
+                            <div class="invalid-feedback">Please select the reservation type.</div>
                         </div>
                         <!-- Additional fields for company -->
                         <div id="company_fields" style="display: none;">
                             <div class="form-group">
                                 <label for="company_name">Company Name</label>
                                 <input type="text" class="form-control" id="company_name" name="company_name">
+                                <div class="invalid-feedback">Please enter the company name.</div>
                             </div>
                             <div class="form-group">
                                 <label for="company_email">Company Email</label>
                                 <input type="email" class="form-control" id="company_email" name="company_email">
+                                <div class="invalid-feedback">Please enter the company email.</div>
                             </div>
                             <div class="form-group">
                                 <label for="company_contact">Company Contact</label>
                                 <input type="tel" class="form-control" id="company_contact" name="company_contact">
+                                <div class="invalid-feedback">Please enter the company contact number.</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -100,6 +110,7 @@
                                 <option value="pickup">Pickup</option>
                                 <option value="delivery">Delivery</option>
                             </select>
+                            <div class="invalid-feedback">Please select the delivery method.</div>
                         </div>
                         <button type="button" id="submitReservation" class="btn btn-primary btn-block mt-3">Submit Reservation</button>
                     </form>
@@ -155,11 +166,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Bootstrap form validation
+    var forms = document.getElementsByClassName('needs-validation');
+    Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+
     // Handle form submission and show modal
     document.getElementById('submitReservation').addEventListener('click', function() {
         var form = document.getElementById('reservationForm');
 
-        // Validate form fields (optional)
+        // Check if form is valid
+        if (form.checkValidity() === false) {
+            form.classList.add('was-validated');
+            return;
+        }
 
         // Submit the form via Ajax
         fetch(form.action, {

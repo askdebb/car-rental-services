@@ -5,10 +5,40 @@
 {% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+{% comment %} <div class="container mt-4">
     <div class="alert alert-success" role="alert">
         <h4 class="alert-heading">Reservation Successful!</h4>
         <p>Your reservation has been successfully completed. Thank you for choosing our service.</p>
     </div>
+</div> {% endcomment %}
+
+
+<div class="container">
+    <div class="header">
+        <h2>Reservation Confirmation</h2>
+    </div>
+    <div class="reservation-details">
+        <p>Your reservation has been confirmed. Below are the details:</p>
+        <table>
+            <tr>
+                <th>Reservation ID</th>
+                <td>{{ reservation.reference_number }}</td>
+            </tr>
+            <tr>
+                <th>Car Details</th>
+                <td>{{ car.name }} - {{ car.make }}</td>
+            </tr>
+            <tr>
+                <th>Reservation Type</th>
+                <td>{{ reservation.reservation_type }}</td>
+            </tr>
+            <!-- Add more fields as needed -->
+        </table>
+    </div>
+    <div class="buttons">
+        <a href="{% url 'profile' %}" style="background-color: #4CAF50;">Go to Profile</a>
+        <a href="{% url 'home' %}" style="background-color: #4CAF50;">Go Home</a>
+    </div>
+    <p>Thank you for choosing our service.</p>
 </div>
 {% endblock %}
