@@ -118,8 +118,9 @@ def reservation_success_view(request):
     transaction_id = request.GET.get('transaction_id')
 
     if status == 'successful':
-        # Fetch the reservation using the tx_ref
-        reservation = get_object_or_404(Reservation, reference_number=tx_ref)
+        # Fetch the reservation using the reservation ID extracted from tx_ref
+        reservation_id = tx_ref.split('-')[-1]  # Assuming tx_ref is in the format 'txref-<reservation_id>'
+        reservation = get_object_or_404(Reservation, id=reservation_id)
         car = get_object_or_404(Car, id=reservation.car.id)
         
         # Process successful payment logic here if needed
