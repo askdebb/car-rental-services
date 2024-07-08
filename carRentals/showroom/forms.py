@@ -6,9 +6,9 @@ class ReservationForm(forms.ModelForm):
     class Meta:
         model = Reservation
         fields = [
-            'name', 'id_number', 'phone_number', 'address', 
-            'emergency_contact_name', 'emergency_contact_phone', 
-            'reservation_type', 'delivery_method', 'company_name', 
+            'name', 'id_number', 'phone_number', 'address',
+            'emergency_contact_name', 'emergency_contact_phone',
+            'reservation_type', 'delivery_method', 'company_name',
             'company_email', 'company_contact'
         ]
 

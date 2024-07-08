@@ -22,7 +22,7 @@ class Car(models.Model):
 class CarImage(models.Model):
     image = models.ImageField(upload_to='car_images/')
     alt_text = models.CharField(max_length=100, blank=True)
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='car_images', null=True, blank=True)  # Updated related_name
+    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='car_images', null=True, blank=True)
     is_thumbnail = models.BooleanField(default=False)
 
     def __str__(self):
@@ -36,8 +36,15 @@ class Reservation(models.Model):
         (COMPANY, 'Company'),
     ]
 
+    PENDING = 'pending'
+    ACCEPTED = 'accepted'
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (ACCEPTED, 'Accepted'),
+    ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reservations')
-    car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='reservations')
+    car = models.ForeignKey('Car', on_delete=models.CASCADE, related_name='reservations')
     name = models.CharField(max_length=100)
     id_number = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20)
@@ -50,6 +57,7 @@ class Reservation(models.Model):
     company_contact = models.CharField(max_length=20, blank=True, null=True)
     delivery_method = models.CharField(max_length=10, choices=[('pickup', 'Pickup'), ('delivery', 'Delivery')])
     reference_number = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

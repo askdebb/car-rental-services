@@ -6,15 +6,66 @@ Profile - {{ user.username }}
 {% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-4">
-    <div class="col-md-6">
-        <h2 class="my-4 text-center">Profile</h2>
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">Username: {{ user.username }}</h5>
-                <p class="card-text">Email: {{ user.email }}</p>
-                <!-- Add more fields as needed -->
+<div class="container mt-4">
+    <h2 class="my-4 text-center"> <span class="text-danger">{{ user.username }}</span>'s Dashboard</h2>
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Total Reservations</h5>
+                    <p class="card-text">{{ total_reservations }}</p>
+                </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Reservations</h5>
+                    <p class="card-text">{{ pending_reservations }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Accepted Reservations</h5>
+                    <p class="card-text">{{ accepted_reservations }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <h3 class="my-4 text-center">Reservations</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Car</th>
+                        <th>ID Number</th>
+                        <th>Phone Number</th>
+                        <th>Delivery Method</th>
+                        <th>Reference Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if reservations %}
+                        {% for reservation in reservations %}
+                            <tr>
+                                <td>{{ reservation.car.name }}</td>
+                                <td>{{ reservation.id_number }}</td>
+                                <td>{{ reservation.phone_number }}</td>
+                                <td>{{ reservation.get_delivery_method_display }}</td>
+                                <td>{{ reservation.reference_number }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No reservations found.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

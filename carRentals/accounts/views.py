@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm, Set
 from django.contrib import messages
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from showroom.models import Reservation  # Import Reservation model
 from .forms import UserRegisterForm
 from .models import PasswordResetRequest
 
@@ -103,4 +104,16 @@ def reset_password_confirm(request, token):
 
 @login_required
 def profile(request):
-    return render(request, 'accounts/profile.html', {'user': request.user})
+    reservations = Reservation.objects.filter(user=request.user)
+    total_reservations = reservations.count()
+    pending_reservations = reservations.filter(status='pending').count()
+    accepted_reservations = reservations.filter(status='accepted').count()
+
+    context = {
+        'user': request.user,
+        'reservations': reservations,
+        'total_reservations': total_reservations,
+        'pending_reservations': pending_reservations,
+        'accepted_reservations': accepted_reservations,
+    }
+    return render(request, 'accounts/profile.html', context)

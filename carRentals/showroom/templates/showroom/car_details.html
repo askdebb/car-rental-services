@@ -41,17 +41,10 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title mb-4">Make a Reservation</h4>
-                    <form id="reservationForm" method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay">
+                    <form id="reservationForm" method="POST" action="{% url 'make_reservation' car.id %}">
                         {% csrf_token %}
-                        <input type="hidden" name="public_key" value="FLWPUBK_TEST-02b9b5fc6406bd4a41c3ff141cc45e93-X" />
-                        <input type="hidden" name="customer[email]" value="{{ request.user.email }}" />
-                        <input type="hidden" name="customer[name]" value="{{ request.user }}" />
-                        <input type="hidden" name="tx_ref" value="txref-{{ car.id }}" />
-                        <input type="hidden" name="redirect_url" value="https://car-rentify.onrender.com/reservation_success" /> <!-- Updated redirect URL -->
-                        <input type="hidden" name="amount" value="{{ car.price }}" />
-                        <input type="hidden" name="currency" value="USD" />
-                        <input type="hidden" name="meta[source]" value="docs-html-test" />
-
+                        
+                        <input type="hidden" name="car_id" value="{{ car.id }}">
                         <div class="form-group">
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" required>
@@ -108,13 +101,47 @@
                                 <option value="delivery">Delivery</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block mt-3" id="start-payment-button">Submit Reservation</button>
+                        <button type="button" id="submitReservation" class="btn btn-primary btn-block mt-3">Submit Reservation</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Bootstrap Modal for Payment -->
+<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Proceed to Payment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Click "Proceed" to continue to payment.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="proceedToPayment" class="btn btn-primary">Proceed</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flutterwave Payment Form -->
+<form method="POST" action="https://checkout.flutterwave.com/v3/hosted/pay" id="flutterPaymentForm" style="display: none;">
+    {% csrf_token %}
+    <input type="hidden" name="public_key" value="FLWPUBK_TEST-34ebfaa96b4f884ecdabde43df370156-X" />
+    <input type="hidden" name="customer[email]" value="{{ request.user.email }}" />
+    <input type="hidden" name="customer[name]" value="{{ request.user }}" />
+    <input type="hidden" name="tx_ref" value="txref-{{ car.id }}" />
+    <input type="hidden" name="redirect_url" value="https://car-rentify.onrender.com/reservation_success" /> <!-- Updated redirect URL -->
+    <input type="hidden" name="amount" value="{{ car.price }}" />
+    <input type="hidden" name="currency" value="USD" />
+    <input type="hidden" name="meta[source]" value="docs-html-test" />
+</form>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -128,10 +155,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Handle form submission
-    var form = document.getElementById('reservationForm');
-    form.addEventListener('submit', function(event) {
-        console.log("Form submitted");
+    // Handle form submission and show modal
+    document.getElementById('submitReservation').addEventListener('click', function() {
+        var form = document.getElementById('reservationForm');
+
+        // Validate form fields (optional)
+
+        // Submit the form via Ajax
+        fetch(form.action, {
+            method: form.method,
+            body: new FormData(form)
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.text();
+        })
+        .then(function(data) {
+            // Show Bootstrap modal for payment
+            $('#paymentModal').modal('show');
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+        });
+    });
+
+    // Handle payment modal button click
+    document.getElementById('proceedToPayment').addEventListener('click', function() {
+        // Submit Flutterwave payment form
+        document.getElementById('flutterPaymentForm').submit();
     });
 });
 </script>

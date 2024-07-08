@@ -1,6 +1,5 @@
-# admin.py
 from django.contrib import admin
-from .models import Car, CarImage, Reservation
+from showroom.models import Car, CarImage, Reservation
 
 class CarImageInline(admin.TabularInline):
     model = CarImage

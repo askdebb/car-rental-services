@@ -1,6 +1,8 @@
 import requests
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.http import JsonResponse
 from .models import Car, Reservation
 from .forms import ReservationForm
@@ -8,6 +10,7 @@ from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.http import HttpResponse
 from decouple import config
+from decimal import Decimal
 
 FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
 
@@ -52,26 +55,27 @@ def make_reservation(request, car_id):
             message = 'Your reservation has been confirmed. Your reference number is {}.'.format(reservation.reference_number)
             recipient_list = [request.user.email]
 
-            # Only send the email if a sender email is available
-            if sender_email:
-                send_mail(subject, message, sender_email, recipient_list)
+            # Create a tabulated HTML representation of the form data
+            html_message = render_to_string('showroom/reservation_email.html', {'reservation': reservation})
+            plain_message = strip_tags(html_message)  # Strip HTML tags for the plain text message
+
+            # Send email with both HTML and plain text content
+            send_mail(subject, plain_message, sender_email, recipient_list, html_message=html_message)
 
             # Prepare data for payment initiation with Flutterwave
             tx_ref = f"CAR_RENT_{reservation.reference_number}"
-            amount = car.price  # Assuming car.price holds the price of the reservation
-            customer_email = request.user.email
-            customer_name = request.user.get_full_name()
+            amount = float(car.price)
 
             # Prepare payload for Flutterwave Hosted Checkout
             payload = {
                 'tx_ref': tx_ref,
                 'amount': amount,
                 'currency': 'USD',
-                'redirect_url': request.build_absolute_uri('/reservation_success/'),  # Redirect to reservation success page after payment
+                'redirect_url': request.build_absolute_uri('/reservation_success/'),
                 'payment_options': 'card,mobilemoney,ussd',
                 'customer': {
-                    'email': customer_email,
-                    'name': customer_name
+                    'email': request.user.email,
+                    'name': request.user.get_full_name()
                 },
                 'customizations': {
                     'title': 'Car Reservation Payment',
@@ -81,7 +85,7 @@ def make_reservation(request, car_id):
 
             # Make POST request to Flutterwave API to initialize payment
             headers = {
-                'Authorization': f'Bearer {config("FLUTTERWAVE_PUBLIC_KEY")}',
+                'Authorization': f'Bearer {FLUTTERWAVE_PUBLIC_KEY}',
                 'Content-Type': 'application/json'
             }
             flutterwave_url = 'https://api.flutterwave.com/v3/hosted/pay'
@@ -104,7 +108,7 @@ def make_reservation(request, car_id):
     else:
         # GET request
         form = ReservationForm()
-    
+
     return render(request, 'showroom/car_details.html', {'car': car, 'form': form})
 
 @login_required

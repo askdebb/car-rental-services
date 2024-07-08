@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservation Confirmation</title>
+    <style>
+        /* Define your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+        .reservation-details {
+            margin-bottom: 20px;
+        }
+        .reservation-details table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .reservation-details th, .reservation-details td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .reservation-details th {
+            background-color: #f2f2f2;
+        }
+        .buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .buttons a {
+            display: inline-block;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Reservation Confirmation</h2>
+        </div>
+        <div class="reservation-details">
+            <p>Your reservation has been confirmed. Below are the details:</p>
+            <table>
+                <tr>
+                    <th>Reservation ID</th>
+                    <td>{{ reservation.reference_number }}</td>
+                </tr>
+                <tr>
+                    <th>Car Details</th>
+                    <td>{{ car.name }} - {{ car.make }}</td>
+                </tr>
+                <tr>
+                    <th>Reservation Type</th>
+                    <td>{{ reservation.reservation_type }}</td>
+                </tr>
+                <!-- Add more fields as needed -->
+            </table>
+        </div>
+        <div class="buttons">
+            <a href="{% url 'profile' %}" style="background-color: #4CAF50;">Go to Profile</a>
+            <a href="{% url 'home' %}" style="background-color: #4CAF50;">Go Home</a>
+        </div>
+        <p>Thank you for choosing our service.</p>
+    </div>
+</body>
+</html>
