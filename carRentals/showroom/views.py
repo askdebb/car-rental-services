@@ -119,6 +119,6 @@ def reservation_success_view(request):
 
     if status == 'successful':
         # Process successful payment logic here if needed
-        return render(request, 'showroom/reservation_success.html', {'tx_ref': tx_ref, 'transaction_id': transaction_id})
+        return render(request, 'showroom/reservation_success.html', {'tx_ref': tx_ref, 'transaction_id': transaction_id, status: 'status'})
     else:
         return HttpResponse("Payment was not successful.")

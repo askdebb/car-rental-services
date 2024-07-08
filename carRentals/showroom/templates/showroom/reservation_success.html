@@ -13,11 +13,11 @@
 </div> {% endcomment %}
 
 
-<div class="container">
-    <div class="header">
+<div class="success_container">
+    <div class="success_header">
         <h2>Reservation Confirmation</h2>
     </div>
-    <div class="reservation-details">
+    <div class="success_reservation-details">
         <p>Your reservation has been confirmed. Below are the details:</p>
         <table>
             <tr>
@@ -32,12 +32,21 @@
                 <th>Reservation Type</th>
                 <td>{{ reservation.reservation_type }}</td>
             </tr>
+                <th>Trasaction Status</th>
+                <td>{{ status }}</td>
+            </tr>
+                <th>Transaction ID</th>
+                <td>{{ transaction_id }}</td>
+            </tr>
+                <th>Transaction Reference</th>
+                <td>{{ tx_ref }}</td>
+            </tr>
             <!-- Add more fields as needed -->
         </table>
     </div>
-    <div class="buttons">
-        <a href="{% url 'profile' %}" style="background-color: #4CAF50;">Go to Profile</a>
-        <a href="{% url 'home' %}" style="background-color: #4CAF50;">Go Home</a>
+    <div class="success_buttons">
+        <a href="{% url 'profile' %}" class="btn btn-info">Go to Profile</a>
+        <a href="{% url 'home' %}" class="btn btn-success">Go Home</a>
     </div>
     <p>Thank you for choosing our service.</p>
 </div>
