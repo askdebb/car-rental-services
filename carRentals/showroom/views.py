@@ -6,8 +6,10 @@ from .models import Car, Reservation
 from .forms import ReservationForm
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-
 from django.http import HttpResponse
+from decouple import config
+
+FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
 
 User = get_user_model()
 
@@ -79,7 +81,7 @@ def make_reservation(request, car_id):
 
             # Make POST request to Flutterwave API to initialize payment
             headers = {
-                'Authorization': f'Bearer FLWPUBK_TEST-02b9b5fc6406bd4a41c3ff141cc45e93-X',  # Replace with your Flutterwave public key
+                'Authorization': f'Bearer {config("FLUTTERWAVE_PUBLIC_KEY")}',
                 'Content-Type': 'application/json'
             }
             flutterwave_url = 'https://api.flutterwave.com/v3/hosted/pay'
