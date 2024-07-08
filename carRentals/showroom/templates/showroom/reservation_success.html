@@ -5,13 +5,12 @@
 {% endblock %}
 
 {% block content %}
-{% comment %} <div class="container mt-4">
+<div class="container mt-4">
     <div class="alert alert-success" role="alert">
         <h4 class="alert-heading">Reservation Successful!</h4>
         <p>Your reservation has been successfully completed. Thank you for choosing our service.</p>
     </div>
-</div> {% endcomment %}
-
+</div>
 
 <div class="success_container">
     <div class="success_header">
@@ -19,7 +18,7 @@
     </div>
     <div class="success_reservation-details">
         <p>Your reservation has been confirmed. Below are the details:</p>
-        <table>
+        <table class="table">
             <tr>
                 <th>Reservation ID</th>
                 <td>{{ reservation.reference_number }}</td>
@@ -32,12 +31,15 @@
                 <th>Reservation Type</th>
                 <td>{{ reservation.reservation_type }}</td>
             </tr>
-                <th>Trasaction Status</th>
+            <tr>
+                <th>Transaction Status</th>
                 <td>{{ status }}</td>
             </tr>
+            <tr>
                 <th>Transaction ID</th>
                 <td>{{ transaction_id }}</td>
             </tr>
+            <tr>
                 <th>Transaction Reference</th>
                 <td>{{ tx_ref }}</td>
             </tr>
