@@ -132,7 +132,7 @@ def reservation_success_view(request):
         context = {
             'reservation': reservation,
             'car': car,
-            'tx_ref': 'tx_ref-' + tx_ref,
+            'tx_ref': tx_ref,
             'transaction_id': transaction_id,
             'status': status
         }
