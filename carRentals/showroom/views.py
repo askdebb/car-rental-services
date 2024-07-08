@@ -113,12 +113,14 @@ def make_reservation(request, car_id):
 
 @login_required
 def reservation_success_view(request):
+    reservations = Reservation.objects.filter(user=request.user)
+    car = get_object_or_404(Car)
     status = request.GET.get('status')
     tx_ref = request.GET.get('tx_ref')
     transaction_id = request.GET.get('transaction_id')
 
     if status == 'successful':
         # Process successful payment logic here if needed
-        return render(request, 'showroom/reservation_success.html', {'tx_ref': tx_ref, 'transaction_id': transaction_id, 'status': status})
+        return render(request, 'showroom/reservation_success.html', {'tx_ref': tx_ref, 'transaction_id': transaction_id, 'status': status, 'reservations' : reservations, 'car': car })
     else:
         return HttpResponse("Payment was not successful.")
