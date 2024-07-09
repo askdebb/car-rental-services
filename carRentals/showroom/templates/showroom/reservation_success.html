@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
 <div class="success_container my-3">
     <div class="success_header">
         <h2>Reservation Confirmation</h2>
@@ -40,7 +42,7 @@
         </table>
     </div>
     <div class="success_buttons">
-        <button onclick="downloadPDF()" class="btn btn-primary">Download as PDF</button>
+        <button onclick="downloadPDF()" class="btn btn-primary">Download PDF</button>
         <a href="{% url 'profile' %}" class="btn btn-info">Go to Profile</a>
         <a href="{% url 'home' %}" class="btn btn-success">Go Home</a>
     </div>
@@ -48,23 +50,16 @@
 </div>
 
 <script>
-function downloadPDF() {
-    const doc = new jsPDF();
-    doc.text(20, 20, "Reservation Confirmation");
-    let y = 30;
-    doc.text(20, y, "Reservation ID: {{ reservation.reference_number }}");
-    y += 10;
-    doc.text(20, y, "Car Details: {{ car.name }} - {{ car.make }}");
-    y += 10;
-    doc.text(20, y, "Reservation Type: {{ reservation.reservation_type }}");
-    y += 10;
-    doc.text(20, y, "Transaction Status: {{ status }}");
-    y += 10;
-    doc.text(20, y, "Transaction ID: {{ transaction_id }}");
-    y += 10;
-    doc.text(20, y, "Transaction Reference: {{ tx_ref }}");
-
-    doc.save("reservation_confirmation.pdf");
-}
+    function downloadPDF() {
+        var doc = new jsPDF();
+        doc.text("Reservation ID: {{ reservation.reference_number }}", 10, 10);
+        doc.text("Car Details: {{ car.name }} - {{ car.make }}", 10, 20);
+        doc.text("Reservation Type: {{ reservation.reservation_type }}", 10, 30);
+        doc.text("Transaction Status: {{ status }}", 10, 40);
+        doc.text("Transaction ID: {{ transaction_id }}", 10, 50);
+        doc.text("Transaction Reference: {{ tx_ref }}", 10, 60);
+        doc.save("reservation_details.pdf");
+    }
 </script>
+
 {% endblock %}
