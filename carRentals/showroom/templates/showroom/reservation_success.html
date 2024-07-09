@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block content %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
 <div class="success_container my-3">
     <div class="success_header">
         <h2>Reservation Confirmation</h2>
@@ -46,6 +49,7 @@
     </div>
     <p class="text-center my-2">Thank you for choosing our service.</p>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 <script>
     // Function to generate and download PDF
@@ -68,5 +72,6 @@
     // Attach click event to the download button
     document.getElementById("downloadPDFButton").addEventListener("click", downloadPDF);
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
 {% endblock %}
