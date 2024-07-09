@@ -3,12 +3,14 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from .models import Car, Reservation
 from .forms import ReservationForm
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse
 from decouple import config
+from decimal import Decimal
 
 FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_PUBLIC_KEY')
 
@@ -111,28 +113,15 @@ def make_reservation(request, car_id):
 
 @login_required
 def reservation_success_view(request):
+    reservations = Reservation.objects.filter(user=request.user)
+    # car = Car.objects.filter(Car)
     status = request.GET.get('status')
     tx_ref = request.GET.get('tx_ref')
     transaction_id = request.GET.get('transaction_id')
 
     if status == 'successful':
-        try:
-            # Extract the reservation reference number from tx_ref
-            reservation_reference = tx_ref.split('-')[-1]
-            reservation = Reservation.objects.get(reference_number=reservation_reference, user=request.user)
-            car = reservation.car
-        except (Reservation.DoesNotExist, ValueError, IndexError):
-            return HttpResponse("No valid reservation found.")
-        except Car.DoesNotExist:
-            return HttpResponse("No Car matches the given query.")
+        # Process successful payment logic here if needed
         
-        context = {
-            'reservation': reservation,
-            'car': car,
-            'tx_ref': tx_ref,
-            'transaction_id': transaction_id,
-            'status': status
-        }
-        return render(request, 'showroom/reservation_success.html', context)
+        return render(request, 'showroom/reservation_success.html', {'tx_ref': tx_ref, 'transaction_id': transaction_id, 'status': status, 'reservations' : reservations })
     else:
         return HttpResponse("Payment was not successful.")

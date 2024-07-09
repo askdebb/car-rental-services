@@ -40,9 +40,31 @@
         </table>
     </div>
     <div class="success_buttons">
+        <button onclick="downloadPDF()" class="btn btn-primary">Download as PDF</button>
         <a href="{% url 'profile' %}" class="btn btn-info">Go to Profile</a>
         <a href="{% url 'home' %}" class="btn btn-success">Go Home</a>
     </div>
     <p>Thank you for choosing our service.</p>
 </div>
+
+<script>
+function downloadPDF() {
+    const doc = new jsPDF();
+    doc.text(20, 20, "Reservation Confirmation");
+    let y = 30;
+    doc.text(20, y, "Reservation ID: {{ reservation.reference_number }}");
+    y += 10;
+    doc.text(20, y, "Car Details: {{ car.name }} - {{ car.make }}");
+    y += 10;
+    doc.text(20, y, "Reservation Type: {{ reservation.reservation_type }}");
+    y += 10;
+    doc.text(20, y, "Transaction Status: {{ status }}");
+    y += 10;
+    doc.text(20, y, "Transaction ID: {{ transaction_id }}");
+    y += 10;
+    doc.text(20, y, "Transaction Reference: {{ tx_ref }}");
+
+    doc.save("reservation_confirmation.pdf");
+}
+</script>
 {% endblock %}
