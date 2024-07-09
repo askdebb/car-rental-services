@@ -6,7 +6,7 @@
 
 {% block content %}
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> {% endcomment %}
 
 <div class="success_container my-3">
     <div class="success_header">
@@ -43,7 +43,7 @@
         </table>
     </div>
     <div class="success_buttons">
-        <button id="downloadPDFButton" class="btn btn-primary">Download PDF</button>
+        {% comment %} <button id="downloadPDFButton" class="btn btn-primary">Download PDF</button> {% endcomment %}
         <a href="{% url 'profile' %}" class="btn btn-info">Go to Profile</a>
         <a href="{% url 'home' %}" class="btn btn-success">Go Home</a>
     </div>
@@ -51,7 +51,7 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
-<script>
+{% comment %} <script>
     // Function to generate and download PDF
     function downloadPDF() {
         // Check if jsPDF is defined
@@ -71,7 +71,7 @@
 
     // Attach click event to the download button
     document.getElementById("downloadPDFButton").addEventListener("click", downloadPDF);
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</script> {% endcomment %}
+{% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> {% endcomment %}
 
 {% endblock %}
