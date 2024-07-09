@@ -122,12 +122,10 @@ def reservation_success_view(request):
             reservation_reference = tx_ref.split('-')[-1]
             reservation = Reservation.objects.get(reference_number=reservation_reference, user=request.user)
             car = reservation.car
-        except Reservation.DoesNotExist:
-            return HttpResponse("No Reservation matches the given query.")
+        except (Reservation.DoesNotExist, ValueError, IndexError):
+            return HttpResponse("No valid reservation found.")
         except Car.DoesNotExist:
             return HttpResponse("No Car matches the given query.")
-        except (ValidationError, ValueError):
-            return HttpResponse("Invalid transaction reference.")
         
         context = {
             'reservation': reservation,
