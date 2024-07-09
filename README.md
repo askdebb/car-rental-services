@@ -1,7 +1,4 @@
 # car-rental-services
-Creating a comprehensive README file is crucial for documenting your project, providing clarity on its structure, functionality, and how to use it. Here’s a template you can use to create a README file for your project, summarizing all that has been done so far:
-
----
 
 # Car Rentify Project README
 
@@ -98,7 +95,3 @@ Contributions are welcome! If you'd like to contribute to the Car Rentify projec
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
-
----
-
-Feel free to customize this template further to fit specific details about your project. Include additional sections or details as necessary to provide comprehensive documentation for users and contributors.
