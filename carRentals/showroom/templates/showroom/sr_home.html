@@ -33,9 +33,9 @@
 <div class="row">
     {% for car in cars %}
     <div class="col-md-4 mb-4">
-        <div class="card">
+        <div class="card" style="height:400px;">
             {% if car.images.first %}
-            <img src="{{ car.images.first.image.url }}" class="card-img-top" alt="{{ car.name }}">
+            <img src="{{ car.images.first.image.url }}" class="card-img-top" alt="{{ car.name }}" style="height:200px;">
             {% else %}
             <img src="https://via.placeholder.com/300" class="card-img-top" alt="{{ car.name }}">
             {% endif %}
